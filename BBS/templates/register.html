@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="/static/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/mycss.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center my_CSS3_class">注册</h2>
+            <hr>
+            <form id="myform">   <!--这里为什么要用form包起来，后面会有解释-->
+                {% csrf_token %}
+                {% for form in form_obj %}
+                    <div class="form-group my_CSS3_class"> <!--has-error 把input框变成红色-->
+                        <label for="{{ form.auto_id }}">{{ form.label }}</label>
+                        {{ form }}
+                        <span class="errors pull-right my_CSS3_class" style="color: red"></span>
+                    </div>
+                {% endfor %}
+            </form>
+            <div class="form-group my_CSS3_class">
+                <label for="id_myfile">头像
+                    <img src="/static/img/default.png" alt="" width="80" style="margin-left: 20px" id="id_img">
+                </label>
+                <input type="file" name="myfile" id="id_myfile" style="display: none">
+            </div>
+            <button class="btn btn-primary pull-right my_CSS3_class" id="id_submit"> 注册</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#id_myfile').change(function () {
+        // 先获取用户上传的文件对象，找到存在的标签，转成js对象，然后点files再加上[0],或者$(this),this就相当于js对象，直接就可以this点
+        // 先获取用户上传的文件对象
+        let fileObj = this.files[0];
+        // 生成一个内置对象
+        let fileReader = new FileReader();
+        // 将文件对象传递给内置对象
+        fileReader.readAsDataURL(fileObj);
+        // 将读取出文件对象替换到img标签中
+        fileReader.onload = function () {   //等待文件阅读器读取完毕再渲染图片
+            $('#id_img').attr('src', fileReader.result)
+        }    // 利用img标签src属性在放url的时候，一旦url发生变化，会自动朝当前的url地址请求数据
+    });
+
+    // ajax提交数据
+    $('#id_submit').click(function () {
+        // 提交的既有普通的键值，又有文件--->formdata
+        // 生成一个Formdata对象
+        let formData = new FormData();
+        // 往FormData对象中添加键值   我们首先想到的可能是formData.append('','')键有username,password,conform_password,email，还有自己写的myfile，很明显一次性搞不定，然后我们可能会想到for循环，依次取每个字段username，password...当然可以做但是太麻烦了，其实还有个简单的方式，利用serializeArray()，这也就是前面为什么要用form包起来
+        // 往Formdata对象中添加键值
+        // console.log($('#myform').serializeArray());
+        // 通过打印的结果可以看到这里面是只有csrf以及username这五个键的，并不包含文件，所以文件需要手动添加
+        $.each($('#myform').serializeArray(), function (index, obj) {
+            // console.log(index,obj)
+            formData.append(obj.name, obj.value)
+        });
+        // 手动添加文件数据
+        formData.append('myfile', $('#id_myfile')[0].files[0]);
+        // 这个时候formData里面就有五组普通的键值，有一个是文件，然后ajax发送
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: formData,
+            // 需要指定的两个参数
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                // console.log(data)
+                    if (data.code == 100) {
+                        // 跳转到登录页面
+                        location.href = data.url
+                    } else {
+                        $.each(data.msg,function (index,obj) {
+                            let targetid = '#id_'+index;
+                            $(targetid).next().html(obj[0]).parent().addClass('has-error')
+                        })
+                    }
+                }
+            });
+        // 当鼠标点进去(聚焦事件)的时候把红色去掉，并且下面的错误信息也去掉,
+    })
+    ;
+    $('input').focus(function () {
+        //
+        $(this).next().html('').parent().removeClass('has-error')
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h3 class="panel-title my_CSS3_class">分类</h3>
+    </div>
+    <div class="panel-body my_CSS3_class">
+        {% for category in category_list %}
+            <p><a href="/{{ user_obj.username }}/category/{{ category.2 }}">{{ category.0 }}({{ category.1 }})</a></p>
+
+        {% endfor %}
+
+    </div>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title my_CSS3_class">标签</h3>
+    </div>
+    <div class="panel-body my_CSS3_class">
+        {% for tag in tag_list %}
+            <p><a href="/{{ user_obj.username }}/tag/{{ tag.2 }}">{{ tag.0 }}({{ tag.1 }})</a></p>
+        {% endfor %}
+
+    </div>
+</div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title my_CSS3_class">日期归档</h3>
+    </div>
+    <div class="panel-body my_CSS3_class">
+        {% for date in date_list %}
+            <p><a href="/{{ user_obj.username }}/archive/{{ date.0|date:'Y-m' }}">{{ date.0|date:'Y年m月' }}({{ date.1 }})</a></p>
+        {% endfor %}
+
+    </div>
+</div>

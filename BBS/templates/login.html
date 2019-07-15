@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/mycss.css">
+</head>
+<body>
+<div class="container-fluid my_CSS3_class">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center">登录</h2>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">用户名</label>
+                <input type="text" name="username" id="id_username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_password">密码</label>
+                <input type="password" name="password" id="id_password" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_code">验证码</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" name="code" id="id_code" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="/get_code/" alt="" width="310" height="35" id="id_img">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-success my_CSS3_class" id="id_button">登录</button>
+            <span class="errors" style="color: red" id="id_error"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#id_img').click(function () {
+        // 获取图片src旧的路径
+        let oldPath = $(this).attr('src');
+        // 修改图片的src属性
+        $(this).attr('src',oldPath += '?')
+    });
+
+    // ajax发送数据
+    $('#id_button').click(function () {
+        $.ajax({
+            url:'',
+            type:'post',
+            data:{
+                'username':$('#id_username').val(),
+                'password':$('#id_password').val(),
+                'code':$('#id_code').val(),
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
+                // 'csrfmiddlewaretoken':$('[name="csrfmiddlewaretoken"]').val(),
+            },
+            success:function (data) {
+                if (data.code == 100){
+                    location.href = data.url
+                }else{
+                    $('#id_error').html(data.msg);
+                    let oldPath = $('#id_img').attr('src');
+                    // 修改图片的src属性
+                    $('#id_img').attr('src',oldPath += '?')
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

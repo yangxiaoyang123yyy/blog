@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="/static/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/mycss.css">
+</head>
+<body>
+<nav class="navbar navbar-collapse" style="background-color: lemonchiffon">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand my_CSS3_class" href="#" style="color: lightsalmon">BBS</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse  my_CSS3_class" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#" style="color: darksalmon">文章 <span class="sr-only">(current)</span></a>
+                </li>
+                <li><a href="#" style="color: darksalmon">随笔</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.user.is_authenticated %}
+                    <li><a href="/{{ request.user.username }}/" style="color: darksalmon">{{ request.user.username }}</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false" style="color: lightcoral">更多操作 <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/set_password/" style="color: darksalmon">修改密码</a></li>
+                            <li><a href="/set_avatar/" style="color: darksalmon">修改头像</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/logout/" style="color: indianred">注销</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="/register/" style="color: darksalmon">注册</a></li>
+                    <li><a href="/login/" style="color: darksalmon">登录</a></li>
+                {% endif %}
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container-fluid  my_CSS3_class">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">震惊</h3>
+                </div>
+                <div class="panel-body">Python那些事</div>
+                <div class="panel-body">你会Django？</div>
+                <div class="panel-body">我不会前端</div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">学习使我快乐</h3>
+                </div>
+                <div class="panel-body">我不休息我还能学 ⊂(‘ω’⊂ )))Σ≡=─༄༅༄༅༄༅༄༅༄༅</div>
+                <div class="panel-body">๑乛◡乛๑卡在了奇怪的地方</div>
+                <div class="panel-body">(=￣ω￣=)喵了个咪</div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">胆小勿进</h3>
+                </div>
+                <div class="panel-body">我不休息我还能学 ⊂(‘ω’⊂ )))Σ≡=─༄༅༄༅༄༅༄༅༄༅</div>
+                <div class="panel-body">๑乛◡乛๑卡在了奇怪的地方</div>
+                <div class="panel-body">(=￣ω￣=)喵了个咪</div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            {% for article in article_list %}
+                <ul class="media-list">
+                    <li class="media">
+                        <h4 class="media-heading"><a href="/{{ article.blog.userinfo.username }}/article/{{ article.pk }}/">{{ article.title }}</a></h4>
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object" src="/media/{{ article.blog.userinfo.avatar }}" alt="..." width="60">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            {{ article.desc }}
+                        </div>
+                    </li>
+                </ul>
+                    <span><a href="">{{ article.blog.userinfo.username }}&nbsp;&nbsp;</a></span>
+                    <span>发布于{{ article.create_time|date:'Y-m-d' }}&nbsp;&nbsp;</span>
+                    <span><span  class="glyphicon glyphicon-comment"></span>评论({{ article.comment_num }})&nbsp;&nbsp;</span>
+                    <span><span  class="glyphicon glyphicon-thumbs-up"></span>点赞({{ article.up_num }})</span>
+                <hr>
+            {% endfor %}
+
+        </div>
+        <div class="col-md-2">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">广告位招租</h3>
+                </div>
+                <div class="panel-body">打广告请联系18888886666</div>
+                <div class="panel-body">老男孩。。。</div>
+                <div class="panel-body"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

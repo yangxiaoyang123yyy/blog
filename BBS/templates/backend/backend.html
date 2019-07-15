@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="/static/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/mycss.css">
+</head>
+<body>
+<nav class="navbar navbar-collapse" style="background-color: #f7e1b5">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand my_CSS3_class" href="/backend/" style="color: #8a6d3b">后台管理</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="/{{ request.user.username }}/" style="color: #8a6d3b" class="my_CSS3_class">{{ request.user.username }}</a></li>
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container-fluid my_CSS3_class">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                               aria-expanded="true" aria-controls="collapseOne">
+                                操作
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <a href="/add_article/">添加文章</a>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <a href="">添加随笔</a>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <a href="">草稿箱</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                              data-toggle="tab">文章</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">随笔</a>
+                    </li>
+                    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">设置</a>
+                    </li>
+                    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">更多</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        {% block cont %}
+                            <table class="table-hover table">
+                                <thead>
+                                <tr>
+                                    <th>标题</th>
+                                    <th>发布时间</th>
+                                    <th>评论数</th>
+                                    <th>点赞数</th>
+                                    <th>操作</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for article in page_queryset %}
+                                    <tr>
+                                        <td>
+                                            <a href="/{{ article.blog.userinfo.username }}/article/{{ article.pk }}">{{ article.title }}</a>
+                                        </td>
+                                        <td>{{ article.create_time|date:'Y-m-d' }}</td>
+                                        <td>{{ article.comment_num }}</td>
+                                        <td>{{ article.up_num }}</td>
+                                        <td><a href="/edit_article{{ article.pk }}/">编辑</a></td>
+                                        <td><a href="/delete_article{{ article.pk }}/">删除</a></td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <div class="text-center">{{ page_obj.page_html|safe }}</div>
+
+                        {% endblock %}
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="profile">随笔页面</div>
+                    <br>
+                    <div role="tabpanel" class="tab-pane" id="messages">
+                        <h4><b>修改设置</b></h4>
+                        <hr>
+                        <b>标题</b>
+                        <input type="text" class="form-control" value="{{ blog.site_title }}">
+                        <br>
+                        <p><b>Blog地址名：&nbsp;&nbsp;</b>{{ request.user.username }}&nbsp;&nbsp;<span>(更改Blog地址名会让以前的文章链接失效，请不要轻易修改，
+如果确实要修改，请发邮件至<a href="">1614012850@qq.com</a>联系管理员修改)</span></p>
+                        <p><b>密码：</b><input type="password" value="{{ request.user.password }}" disabled><a href="/set_password/">[修改密码]</a></p>
+                        <p><b>Email:</b>{{ request.user.email }}<a href="/set_email/">[修改邮箱]</a></p>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="settings">更多页面</div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

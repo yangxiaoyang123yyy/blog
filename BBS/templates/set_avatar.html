@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="/static/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/mycss.css">
+</head>
+<body>
+<div class="container-fluid my_CSS3_class">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center">修改头像</h2>
+            <hr>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group col-md-4 pull-left">
+                    <p for="" style="font-size: 20px">原头像
+                        <img src="/media/{{ avatar }}" alt="" width="160" style="margin-left: 20px">
+                    </p>
+                </div>
+                <div class="col-md-4 pull-right">
+                    <label for="id_myfile" style="font-size: 20px">点击上传新头像
+                        <img src="/media/{{ avatar }}" alt="" width="160" style="margin-left: 20px" id="id_img">
+                    </label>
+                     <input type="file" name="myfile" id="id_myfile" style="display: none">
+                </div>
+            </form>
+            <button class="btn btn-warning" style="margin:50px 250px " id="id_submit">确认</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $('#id_myfile').change(function () {
+        // 先获取用户上传的文件对象，找到存在的标签，转成js对象，然后点files再加上[0],或者$(this),this就相当于js对象，直接就可以this点
+        // 先获取用户上传的文件对象
+        let fileObj = this.files[0];
+        // 生成一个内置对象
+        let fileReader = new FileReader();
+        // 将文件对象传递给内置对象
+        fileReader.readAsDataURL(fileObj);
+        // 将读取出文件对象替换到img标签中
+        fileReader.onload = function () {   //等待文件阅读器读取完毕再渲染图片
+            $('#id_img').attr('src', fileReader.result)
+        }    // 利用img标签src属性在放url的时候，一旦url发生变化，会自动朝当前的url地址请求数据
+    });
+
+    // ajax提交数据
+    $('#id_submit').click(function () {
+        let formData = new FormData();
+        formData.append('myfile', $('#id_myfile')[0].files[0]);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        // 这个时候formData里面就有五组普通的键值，有一个是文件，然后ajax发送
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: formData,
+            // 需要指定的两个参数
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data)
+                    if (data.code == 100) {
+                        // 跳转到登录页面
+                        location.href = data.url
+                    }
+                    }
+        // 当鼠标点进去(聚焦事件)的时候把红色去掉，并且下面的错误信息也去掉,
+    });
+});
+
+</script>
+
+</body>
+</html>

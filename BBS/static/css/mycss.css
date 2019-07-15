@@ -1,0 +1,8 @@
+@font-face {
+       font-family: ttq; /*这里是说明调用来的字体名字*/
+       src: url('/static/font/ttq.ttf'); /*这里是字体文件路径*/
+}
+
+.my_CSS3_class {
+        font-family: ttq;
+}

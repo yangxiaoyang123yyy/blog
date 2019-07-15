@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="/static/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+{#    <style>#}
+{#        @font-face {#}
+{#            font-family: ttq; /*这里是说明调用来的字体名字*/#}
+{#            src: url('/static/font/ttq.ttf'); /*这里是字体文件路径*/#}
+{#            }#}
+{#        .my_CSS3_class {#}
+{#            font-family: ttq;#}
+{#}#}
+{#    </style>#}
+    <link rel="stylesheet" href="/static/css/mycss.css">
+
+
+</head>
+<body>
+<div class="container-fluid my_CSS3_class">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center">修改邮箱</h2>
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">用户名</label>
+                    <input type="text" name="username" id="id_username" class="form-control" disabled value="{{ request.user.username }}">
+                </div>
+                <div class="form-group">
+                    <label for="id_old_email">旧邮箱</label>
+                    <input type="email" name="old_email" id="id_old_email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="id_new_email">新邮箱</label>
+                    <input type="email" name="new_email" id="id_new_email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="id_confirm_email">确认邮箱</label>
+                    <input type="email" name="confirm_email" id="id_confirm_email" class="form-control">
+                </div>
+                <button class="btn btn-warning" id="id_button">确认修改</button>
+                <span class="errors" style="color: red" id="id_error"></span>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
